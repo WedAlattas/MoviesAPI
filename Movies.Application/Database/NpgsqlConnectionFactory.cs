@@ -20,6 +20,7 @@ namespace Movies.Application.Database
         public async Task<IDbConnection> CreateConnectionAsync(CancellationToken token = default)
         {
             var connection = new NpgsqlConnection(_connectionString);
+            Console.WriteLine("Opening connection to database...");
             await connection.OpenAsync(token);
             return connection;
         }

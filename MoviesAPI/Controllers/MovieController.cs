@@ -6,10 +6,10 @@ using Movies.Contracts.Requests;
 namespace MoviesAPI.Controllers
 {
     [ApiController]
-    public class Movie : ControllerBase
+    public class MovieController : ControllerBase
     {
         private readonly IMovieRepository _movieRepository;
-        public Movie(IMovieRepository movieRepository)
+        public MovieController(IMovieRepository movieRepository)
         {
             _movieRepository = movieRepository;
         }
@@ -77,7 +77,7 @@ namespace MoviesAPI.Controllers
         }
 
 
-        [HttpDelete]
+        [HttpDelete(ApiEndpoints.Movies.Delete)]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var deleted = await _movieRepository.DeleteByIdAsync(id);

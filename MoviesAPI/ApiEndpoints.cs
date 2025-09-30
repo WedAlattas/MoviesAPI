@@ -15,6 +15,14 @@ namespace MoviesAPI
             public const string Delete = $"{Base}/{{id:guid}}";
         }
 
+        public static class Identity {
+            private const string Base = $"{ApiBase}/identity/";
+            public const string Login = "login";
+            public const string Register = "register";
+
+
+        }
+
 
     }
 }

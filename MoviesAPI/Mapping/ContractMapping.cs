@@ -49,5 +49,14 @@ namespace Movies.API.Mapping
             };
         }
 
+        public static User MapToUser(this UserRegisterationRequest user)
+        {
+            return new User() { 
+                Email = user.Email, 
+                Password = user.Password, 
+                Id = Guid.NewGuid()
+            };
+        }
+
     }
 }

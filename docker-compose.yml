@@ -1,0 +1,37 @@
+﻿services:
+  # API service for the movies application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: movies_api
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Username=postgres;Password=yourpassword;Database=moviesdb;"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # PostgreSQL database service
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: moviesdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data: {}

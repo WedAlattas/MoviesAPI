@@ -24,8 +24,8 @@ namespace Movies.Application.Repositories
             using var transaction = connection.BeginTransaction();
 
             var result = await connection.ExecuteAsync(new CommandDefinition("""
-            insert into movies (id, slug, title, yearofrelease) 
-            values (@Id, @Slug, @Title, @YearOfRelease)
+            insert into moviesdb.movies (id, title, yearofrelease) 
+            values (@Id, @Title, @YearOfRelease)
             """, movie, cancellationToken: token));
 
             if (result > 0)
@@ -33,7 +33,7 @@ namespace Movies.Application.Repositories
                 foreach (var genre in movie.Genres)
                 {
                     await connection.ExecuteAsync(new CommandDefinition("""
-                    insert into genres (movieId, name) 
+                    insert into moviesdb.genres (movieId, name) 
                     values (@MovieId, @Name)
                     """, new { MovieId = movie.Id, Name = genre }, cancellationToken: token));
                 }
@@ -49,11 +49,11 @@ namespace Movies.Application.Repositories
             using var transaction = connection.BeginTransaction();
 
             await connection.ExecuteAsync(new CommandDefinition("""
-            delete from genres where movieid = @id
+            delete from moviesdb.genres where movieid = @id
             """, new { id }, cancellationToken: token));
 
             var result = await connection.ExecuteAsync(new CommandDefinition("""
-            delete from movies where id = @id
+            delete from moviesdb.movies where id = @id
             """, new { id }, cancellationToken: token));
 
             transaction.Commit();
@@ -73,7 +73,7 @@ namespace Movies.Application.Repositories
             using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
             var result = await connection.QueryAsync(new CommandDefinition("""
             select m.*, string_agg(g.name, ',') as genres 
-            from movies m left join genres g on m.id = g.movieid
+            from moviesdb.movies m  left join moviesdb.genres g on m.id = g.movieid
             group by id 
             """, cancellationToken: token));
 
@@ -91,7 +91,7 @@ namespace Movies.Application.Repositories
             using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
             var movie = await connection.QuerySingleOrDefaultAsync<Movie>(
                 new CommandDefinition("""
-            select * from movies where id = @id
+            select * from moviesdb.movies where id = @id
             """, new { id }, cancellationToken: token));
 
             if (movie is null)
@@ -101,7 +101,7 @@ namespace Movies.Application.Repositories
 
             var genres = await connection.QueryAsync<string>(
                 new CommandDefinition("""
-            select name from genres where movieid = @id 
+            select name from moviesdb.genres where movieid = @id 
             """, new { id }, cancellationToken: token));
 
             foreach (var genre in genres)
@@ -118,19 +118,19 @@ namespace Movies.Application.Repositories
             using var transaction = connection.BeginTransaction();
 
             await connection.ExecuteAsync(new CommandDefinition("""
-            delete from genres where movieid = @id
+            delete from moviesdb.genres where movieid = @id
             """, new { id = movie.Id }, cancellationToken: token));
 
             foreach (var genre in movie.Genres)
             {
                 await connection.ExecuteAsync(new CommandDefinition("""
-                    insert into genres (movieId, name) 
+                    insert into moviesdb.genres (movieId, name) 
                     values (@MovieId, @Name)
                     """, new { MovieId = movie.Id, Name = genre }, cancellationToken: token));
             }
 
             var result = await connection.ExecuteAsync(new CommandDefinition("""
-            update movies set slug = @Slug, title = @Title, yearofrelease = @YearOfRelease 
+            update moviesdb.movies set title = @Title, yearofrelease = @YearOfRelease 
             where id = @Id
             """, movie, cancellationToken: token));
 
