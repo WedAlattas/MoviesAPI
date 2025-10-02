@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Movies.Application.Database;
 using Movies.Application.Options;
 using Movies.Application.Repositories;
@@ -17,10 +18,12 @@ namespace Movies.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddSingleton<IMovieRepository, MovieRepository>();
-            services.AddSingleton<IIdentityRepository, IdentityRepository>();
-
             services.AddSingleton<IMovieService, MovieService>();
-            services.AddSingleton<IIdentityService, IdentityService>();
+
+
+            services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IIdentityRepository, IdentityRepository>();
+
 
             services.AddValidatorsFromAssemblyContaining<IApplicationMarker>(ServiceLifetime.Singleton);
 
@@ -55,14 +58,60 @@ namespace Movies.Application
                   {
                       ValidateIssuerSigningKey = true,
                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings.Secret)),
-                      ValidateIssuer = true,
-                      ValidateAudience = true,
-                      RequireExpirationTime  = false,
+                      ValidateIssuer = false,
+                      ValidateAudience = false,
+                      RequireExpirationTime = false,
                       ValidateLifetime = true
                   };
+                 
+                 
               });
 
             return services;
+        }
+
+        public static IServiceCollection AddSwagger(this IServiceCollection services, IConfiguration config)
+        {
+
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1",
+                    new OpenApiInfo { Title = "Movies API", Version = "v1" });
+
+
+        
+                   
+                x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                } );
+
+
+
+
+
+                x.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+                        } );
+
+            return services;
+
         }
     }
 }

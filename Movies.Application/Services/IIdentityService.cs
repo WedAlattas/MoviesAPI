@@ -10,7 +10,7 @@ namespace Movies.Application.Services
     public interface IIdentityService
     {
         Task<AuthenticationResult> LoginAsync(User user, CancellationToken token = default);
-        Task<bool> RegisterAsync(User user, CancellationToken token = default);
+        Task<AuthenticationResult> RegisterAsync(User user, CancellationToken token = default);
 
 
     }

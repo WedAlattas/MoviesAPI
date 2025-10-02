@@ -10,7 +10,7 @@ namespace Movies.Application.Models
     {
 
         public  string? token { get; set; }
-        public IEnumerable<string> ErrorMessages { get; set; }
+        public IEnumerable<string>? ErrorMessages { get; set; }
         public bool success { get; set; }
     }
 }

@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Movies.API.Mapping;
 using Movies.Application.Repositories;
@@ -5,7 +7,10 @@ using Movies.Contracts.Requests;
 
 namespace MoviesAPI.Controllers
 {
+    
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class MovieController : ControllerBase
     {
         private readonly IMovieRepository _movieRepository;

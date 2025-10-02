@@ -64,7 +64,7 @@ namespace Movies.Application.Repositories
         {
             using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
             return await connection.ExecuteScalarAsync<bool>(new CommandDefinition("""
-            select count(1) from movies where id = @id
+            select count(1) from moviesdb.movies where id = @id
             """, new { id }, cancellationToken: token));
         }
 
