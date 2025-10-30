@@ -54,7 +54,16 @@ namespace Movies.API.Mapping
             return new User() { 
                 Email = user.Email, 
                 Password = user.Password, 
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(), isAdmin = user.isAdmin
+            };
+        }
+
+        public static User MapToUser(this LoginRequest user)
+        {
+            return new User()
+            {
+                Email = user.Email,
+                Password = user.Password,
             };
         }
 

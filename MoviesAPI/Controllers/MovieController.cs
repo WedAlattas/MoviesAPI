@@ -9,7 +9,6 @@ namespace MoviesAPI.Controllers
 {
     
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
     public class MovieController : ControllerBase
     {
@@ -19,7 +18,7 @@ namespace MoviesAPI.Controllers
             _movieRepository = movieRepository;
         }
 
-
+        [Authorize("User")]
         [HttpPost(ApiEndpoints.Movies.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMovieRequest request)
         {
@@ -41,7 +40,8 @@ namespace MoviesAPI.Controllers
             return StatusCode(500, "An error occurred while creating the movie.");
         }
 
-        [HttpPost(ApiEndpoints.Movies.Get)]
+        [AllowAnonymous]
+        [HttpGet(ApiEndpoints.Movies.Get)]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             var result = await _movieRepository.GetByIdAsync(id);
@@ -55,6 +55,7 @@ namespace MoviesAPI.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet(ApiEndpoints.Movies.GetAll)]
         public async Task<IActionResult> GetAll()
         {
@@ -65,6 +66,7 @@ namespace MoviesAPI.Controllers
 
         }
 
+        [Authorize("User")]
 
         [HttpPut(ApiEndpoints.Movies.Update)]
         public async Task<IActionResult> Update([FromRoute] Guid id,
@@ -81,7 +83,7 @@ namespace MoviesAPI.Controllers
             return Ok(response);
         }
 
-
+        [Authorize("Admin")]
         [HttpDelete(ApiEndpoints.Movies.Delete)]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {

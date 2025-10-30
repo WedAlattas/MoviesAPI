@@ -45,6 +45,7 @@ namespace Movies.Application
             config.Bind(nameof(JwtSettings), JwtSettings);
             services.AddSingleton(JwtSettings);
 
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,14 +59,22 @@ namespace Movies.Application
                   {
                       ValidateIssuerSigningKey = true,
                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings.Secret)),
-                      ValidateIssuer = false,
-                      ValidateAudience = false,
-                      RequireExpirationTime = false,
+                      ValidateIssuer = true,
+                      ValidateAudience = true,
+                      RequireExpirationTime = true,
+                      ValidIssuer = JwtSettings.Issuer,
+                      ValidAudience = JwtSettings.Audience,
                       ValidateLifetime = true
                   };
                  
                  
               });
+
+            services.AddAuthorization(p =>
+            {
+                p.AddPolicy("Admin", s => s.RequireClaim("admin", "true"));
+                p.AddPolicy("User", s => s.RequireClaim("admin", "false"));
+            });
 
             return services;
         }

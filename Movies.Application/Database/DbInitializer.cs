@@ -45,7 +45,8 @@ namespace Movies.Application.Database
             create table if not exists users (
             id UUID primary key,
             password TEXT not null, 
-            email TEXT not null);
+            email TEXT not null, 
+            isAdmin BOOLEAN not null);
         """);
         }
     }

@@ -23,8 +23,8 @@ namespace Movies.Application.Repositories
             using var transaction = connection.BeginTransaction();
 
             var result = await connection.ExecuteAsync(new CommandDefinition("""
-            insert into moviesdb.users (id, password, email) 
-            values (@Id, @Password, @Email)
+            insert into moviesdb.users (id, password, email, isAdmin) 
+            values (@Id, @Password, @Email, @isAdmin)
             """, user, cancellationToken: token));
 
             transaction.Commit();

@@ -95,11 +95,14 @@ namespace Movies.Application.Services
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim("admin", user.isAdmin.ToString().ToLower()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.Add(_jwtSettings.TokenLifeTime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature)
+                SecurityAlgorithms.HmacSha256Signature
+                ), Issuer = _jwtSettings.Issuer, 
+                Audience = _jwtSettings.Audience
             };
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
 

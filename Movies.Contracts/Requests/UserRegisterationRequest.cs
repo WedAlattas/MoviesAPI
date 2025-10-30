@@ -10,5 +10,7 @@ namespace Movies.Contracts.Requests
     {
         public required string Email { get; init; } 
         public required string Password { get; init; }
+        public required bool isAdmin { get; set; }
+
     }
 }

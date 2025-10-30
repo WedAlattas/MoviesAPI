@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Movies.Application.Models
+namespace Movies.Contracts.Requests
 {
-    public class User
+    public class LoginRequest
     {
-        public Guid Id { get; set; } 
         public required string Email { get; init; }
         public required string Password { get; init; }
-        public bool isAdmin { get; set; } 
     }
 }

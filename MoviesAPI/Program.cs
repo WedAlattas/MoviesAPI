@@ -23,7 +23,6 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
 }*/
-app.UseAuthentication();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -33,7 +32,9 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseMiddleware<ValidationMappingMiddleware>();
 
 app.MapControllers();

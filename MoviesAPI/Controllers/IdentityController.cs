@@ -10,7 +10,6 @@ using MoviesAPI;
 namespace Movies.API.Controllers
 {
     [ApiController]
-
     public class IdentityController : ControllerBase
     {
 
@@ -39,7 +38,7 @@ namespace Movies.API.Controllers
 
 
         [HttpPost(ApiEndpoints.Identity.Login)]
-        public async Task<IActionResult> Login([FromBody] UserRegisterationRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var user = request.MapToUser();
             var result = await _identityService.LoginAsync(user);
